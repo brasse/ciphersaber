@@ -6,28 +6,23 @@ import random
 import sys
 from optparse import OptionParser
 
+IV_LENGTH = 10
+
 def to_int_list(s):
     return [ord(c) for c in s]
 
 def init_encrypt(out_stream):
-    # make IV
-    iv = []
-    random.seed()
-    for i in range(10):
-        iv.append(random.randint(0, 255))
-
-    # prefix stdout with IV
+    # create IV
+    iv = [random.randint(0, 255) for _ in range(IV_LENGTH)]
     for b in iv:
         out_stream.write(chr(b))
-
     return iv
 
 def init_decrypt(f):
     # get IV
-    iv = to_int_list(f.read(10))
-    if not len(iv) == 10:
+    iv = to_int_list(f.read(IV_LENGTH))
+    if not len(iv) == IV_LENGTH:
         raise Exception('malformed IV')
-
     return iv
 
 def init_s_box(user_key, iv, n):
@@ -36,7 +31,7 @@ def init_s_box(user_key, iv, n):
     K = []
     while len(K) < 256:
         i = min(len(key), 256 - len(K))
-        K = K + key[0:i]
+        K.extend(key[0:i])
 
     S = range(256)
 
