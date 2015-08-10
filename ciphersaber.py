@@ -56,7 +56,7 @@ def process(encrypt, in_stream, key_string, n, out_stream=sys.stdout):
         msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)
 
     key = to_int_list(key_string)
-    
+
     if encrypt:
         iv = init_encrypt(out_stream)
     else:
@@ -66,7 +66,7 @@ def process(encrypt, in_stream, key_string, n, out_stream=sys.stdout):
     S = init_s_box(key, iv, n)
 
     # encrypt/decrypt
-    i, j = 0, 0    
+    i, j = 0, 0
     c = in_stream.read(1)
     while len(c) == 1:
         k, i, j = next_random_byte(S, i, j)
@@ -82,7 +82,7 @@ def main():
                       help='Decrypt FILE')
     parser.add_option('-n', type='int', dest='n', default=20,
                       help='Mix state array N times. (default: %default)')
-                      
+
     (options, args) = parser.parse_args()
 
     if len(args) != 2:
