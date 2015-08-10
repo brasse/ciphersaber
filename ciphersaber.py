@@ -74,7 +74,7 @@ def process(encrypt, in_stream, key_string, n, out_stream=sys.stdout):
         c = in_stream.read(1)
 
 def main():
-    parser = OptionParser(usage='usage: %prog [options] FILE KEY')
+    parser = OptionParser(usage='usage: %prog [options] FILE|- KEY')
     parser.set_defaults(encrypt=True)
     parser.add_option('-e', action='store_true', dest='encrypt',
                       help='Encrypt FILE (default)')
@@ -88,8 +88,11 @@ def main():
     if len(args) != 2:
         parser.error('wrong number of arguments')
 
-    with open(args[0], 'rb') as f:
-        process(options.encrypt, f, args[1], options.n)
+    if args[0] == '-':
+        process(options.encrypt, sys.stdin, args[1], options.n)
+    else:
+        with open(args[0], 'rb') as f:
+            process(options.encrypt, f, args[1], options.n)
 
 if __name__ == '__main__':
     main()
